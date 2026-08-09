@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/sheet";
 import { useTheme } from "@/components/ThemeProvider";
 import { getAccessToken, clearTokens } from "@/lib/auth";
+import { useSession } from "next-auth/react";
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
@@ -46,11 +47,12 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Default false for SSR
+  const { data: session, status } = useSession();
 
   // Lazy load isLoggedIn after hydration to avoid mismatch
   useEffect(() => {
-    setIsLoggedIn(!!getAccessToken());
-  }, []);
+    setIsLoggedIn(!!session);
+  }, [session]);
 
   const handleSearch = useCallback(
     (e: React.FormEvent) => {
