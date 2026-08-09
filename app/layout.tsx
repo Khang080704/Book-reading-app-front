@@ -6,6 +6,7 @@ import Providers from "@/components/Providers";
 import Navbar from "@/components/layout/Navbar";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { SessionProviders } from "@/components/SessionProvider";
+import TokenRefresher from "@/components/auth/TokenRefresher";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -38,7 +39,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-full flex flex-col font-sans">
         <SessionProviders>
-
+          {/* Proactive token refresh + redirect on RefreshTokenError */}
+          <TokenRefresher />
           <Providers>
             <Navbar />
             <Breadcrumbs />
