@@ -31,8 +31,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useTheme } from "@/components/ThemeProvider";
-import { getAccessToken, clearTokens } from "@/lib/auth";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
+import { getLogoutUrl } from "@/actions/auth.action";
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
@@ -66,9 +66,14 @@ export default function Navbar() {
     [searchQuery, router]
   );
 
-  const handleLogout = () => {
-    clearTokens();
-    router.push("/auth/login");
+  const handleLogout = async () => {
+    try {
+      const logoutUrl = await getLogoutUrl();
+      await signOut({ redirect: false });
+      window.location.href = logoutUrl;
+    } catch {
+      await signOut({ redirectTo: "/" });
+    }
   };
 
   const cycleTheme = () => {
