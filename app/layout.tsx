@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/layout/Navbar";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
+import { SessionProviders } from "@/components/SessionProvider";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -36,11 +37,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col font-sans">
-        <Providers>
-          <Navbar />
-          <Breadcrumbs />
-          <div className="flex-1">{children}</div>
-        </Providers>
+        <SessionProviders>
+
+          <Providers>
+            <Navbar />
+            <Breadcrumbs />
+            <div className="flex-1">{children}</div>
+          </Providers>
+        </SessionProviders>
       </body>
     </html>
   );
