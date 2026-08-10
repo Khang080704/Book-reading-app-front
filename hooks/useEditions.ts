@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { get } from "@/lib/api";
+import { getWorkEditionsAction } from "@/actions/book.action";
 import type { EditionsListDTO } from "@/lib/types";
 
 export function useEditions(workKey: string) {
-  return useQuery<EditionsListDTO>({
+  return useQuery<EditionsListDTO | null>({
     queryKey: ["editions", workKey],
-    queryFn: () => get<EditionsListDTO>(`/books/works/${workKey}/editions`),
+    queryFn: () => getWorkEditionsAction(workKey),
     enabled: !!workKey,
   });
 }

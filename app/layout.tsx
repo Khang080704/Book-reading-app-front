@@ -37,7 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={cn("h-full antialiased", inter.variable, merriweather.variable)}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <SessionProviders>
           {/* Proactive token refresh + redirect on RefreshTokenError */}
           <TokenRefresher />
