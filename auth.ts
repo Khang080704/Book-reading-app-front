@@ -66,18 +66,18 @@ export const {
     async jwt({ token, account }) {
       // ── Lần đăng nhập đầu tiên: account được trả về bởi Keycloak ──
       if (account) {
+        const expiresAt = account.expires_at ?? (Math.floor(Date.now() / 1000) + ((account.expires_in as number) ?? 300));
         return {
           ...token,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
           idToken: account.id_token,
-          // expires_at từ account là epoch seconds
-          expiresAt: account.expires_at,
+          expiresAt,
         };
       }
 
       // ── Token vẫn còn hạn (buffer 60 giây để tránh race condition) ──
-      if (Date.now() < (token.expiresAt! * 1000) - 60_000) {
+      if (token.expiresAt && Date.now() < (token.expiresAt * 1000) - 60_000) {
         return token;
       }
 

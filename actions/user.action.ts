@@ -1,6 +1,6 @@
 import { UserService } from "@/services/UserService";
 
 export const getUserInfoAction = async () => {
-    const user = UserService.getUserInfo();
-    return user
-}
+    const user = await UserService.getUserInfo();
+    return user;
+}

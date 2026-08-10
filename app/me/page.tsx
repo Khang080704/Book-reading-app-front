@@ -6,6 +6,7 @@ export default async function MePage() {
   console.log(data);
 
   return (
-    <UserInfo email={data.email} username={data.userName} />
-  )
+    <UserInfo email={data?.email ?? ""} username={data?.userName ?? ""} />
+  );
 }
+

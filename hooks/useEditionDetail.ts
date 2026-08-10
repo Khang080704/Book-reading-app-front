@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { get } from "@/lib/api";
+import { getEditionDetailsAction } from "@/actions/book.action";
 import type { EditionDTO } from "@/lib/types";
 
 export function useEditionDetail(editionKey: string) {
-  return useQuery<EditionDTO>({
+  return useQuery<EditionDTO | null>({
     queryKey: ["edition", editionKey],
-    queryFn: () => get<EditionDTO>(`/books/editions/${editionKey}`),
+    queryFn: () => getEditionDetailsAction(editionKey),
     enabled: !!editionKey,
   });
 }

@@ -13,6 +13,7 @@ import {
   Moon,
   Menu,
   Palette,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -168,6 +169,10 @@ export default function Navbar() {
                   <User className="size-4 mr-2" />
                   Hồ sơ
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/me/favorites")}>
+                  <Heart className="size-4 mr-2" />
+                  Yêu thích
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="size-4 mr-2" />
@@ -235,6 +240,12 @@ export default function Navbar() {
                         <Button variant="ghost" className="w-full justify-start">
                           <User className="size-4 mr-2" />
                           Hồ sơ
+                        </Button>
+                      </Link>
+                      <Link href="/me/favorites" onClick={() => setMobileOpen(false)}>
+                        <Button variant="ghost" className="w-full justify-start">
+                          <Heart className="size-4 mr-2" />
+                          Yêu thích
                         </Button>
                       </Link>
                       <Button variant="ghost" className="w-full justify-start text-destructive" onClick={handleLogout}>
