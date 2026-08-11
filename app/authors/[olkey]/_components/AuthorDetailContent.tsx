@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -26,6 +26,22 @@ export default function AuthorDetailContent({
   isFavorite,
   isLoggedIn,
 }: AuthorDetailContentProps) {
+  const [page, setPage] = useState(1);
+  const worksRef = useRef<HTMLDivElement>(null);
+
+  const limit = 12;
+  const totalPages = Math.ceil(works.length / limit);
+  const startIndex = (page - 1) * limit;
+  const paginatedWorks = works.slice(startIndex, startIndex + limit);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    if (worksRef.current) {
+      const y = worksRef.current.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
       {/* Back button */}
@@ -97,7 +113,7 @@ export default function AuthorDetailContent({
       </motion.div>
 
       {/* Works section */}
-      <section>
+      <section ref={worksRef}>
         <h2 className="text-2xl font-serif font-bold tracking-tight mb-6 flex items-center gap-3">
           <BookOpen className="size-6 text-primary" />
           Tác phẩm
@@ -107,7 +123,31 @@ export default function AuthorDetailContent({
             </span>
           )}
         </h2>
-        <AuthorWorksList works={works} />
+        <AuthorWorksList works={paginatedWorks} />
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-3 mt-8">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page <= 1}
+              onClick={() => handlePageChange(Math.max(1, page - 1))}
+            >
+              Trang trước
+            </Button>
+            <span className="text-sm text-muted-foreground px-3">
+              Trang {page} / {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
+            >
+              Trang sau
+            </Button>
+          </div>
+        )}
       </section>
     </main>
   );
