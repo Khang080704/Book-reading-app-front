@@ -28,6 +28,7 @@ export default function AuthorDetailContent({
 }: AuthorDetailContentProps) {
   const [page, setPage] = useState(1);
   const worksRef = useRef<HTMLDivElement>(null);
+  console.log(detail)
 
   const limit = 12;
   const totalPages = Math.ceil(works.length / limit);

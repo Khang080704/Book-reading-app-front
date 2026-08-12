@@ -72,7 +72,7 @@ export default function FavoriteWorkCard({
 
       <Link href={`/books/works/${encodeURIComponent(workKey)}`} className="block">
         <div className="relative aspect-[2/3] w-full overflow-hidden bg-muted">
-          {work.coverUrl ? (
+          {work.coverUrl && work.coverUrl.includes('https') ? (
             <Image
               src={work.coverUrl}
               alt={work.title}
