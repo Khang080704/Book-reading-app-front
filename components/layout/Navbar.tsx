@@ -39,6 +39,7 @@ const navLinks = [
   { href: "/", label: "Trang chủ" },
   { href: "/books/search", label: "Tìm sách" },
   { href: "/authors/search", label: "Tác giả" },
+  { href: "/available", label: "Sách sẵn có" }
 ];
 
 export default function Navbar() {

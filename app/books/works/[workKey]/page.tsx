@@ -4,6 +4,7 @@ import { FavoriteService } from "@/services/FavoriteService";
 import { BookService } from "@/services/BookService";
 import { auth } from "@/auth";
 import WorkDetailContent from "./_components/WorkDetailContent";
+import { getReadingResourceAction } from "@/actions/book.action";
 
 interface WorkDetailPageProps {
   params: Promise<{ workKey: string }>;
@@ -15,6 +16,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
 
   // Fetch work detail from backend using BookService (includes Keycloak token if available)
   const data = await BookService.getWorkDetails(decodedKey);
+  const readingResource = await getReadingResourceAction(data?.workKey ?? "");
 
   if (!data) {
     notFound();
@@ -37,6 +39,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
       workKey={decodedKey}
       isFavorite={isFavorite}
       isLoggedIn={!!session}
+      readingResource={readingResource}
     />
   );
 }

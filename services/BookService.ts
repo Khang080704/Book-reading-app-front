@@ -6,6 +6,8 @@ import type {
   BookDetailDTO,
   EditionsListDTO,
   EditionDTO,
+  ReadingResourceDTO,
+  ChapterDTO,
 } from "@/lib/types";
 
 export class BookService {
@@ -61,4 +63,24 @@ export class BookService {
     if (!res.ok) return null;
     return (await res.json()) as EditionDTO;
   }
+
+  public static async getReadingResource(workKey: string): Promise<ReadingResourceDTO> {
+    console.log(workKey)
+    const res = await this.request(`/api/v1/books/works/${workKey}/reading-resource`);
+    const data = await res.json();
+    return data as ReadingResourceDTO;
+  }
+
+  public static async getAvailableBooks(): Promise<SearchBookDTO[]> {
+    const res = await this.request(`/api/v1/books`);
+    if (!res.ok) return [];
+    return (await res.json()) as SearchBookDTO[];
+  }
+
+  public static async getChapters(resourceId: string): Promise<ChapterDTO[]> {
+    const res = await this.request(`/api/v1/reading-resources/${encodeURIComponent(resourceId)}`);
+    if (!res.ok) return [];
+    return (await res.json()) as ChapterDTO[];
+  }
 }
+

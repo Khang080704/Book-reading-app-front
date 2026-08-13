@@ -3,13 +3,14 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, BookOpen, Layers, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import FavoriteWorkButton from "@/components/book/FavoriteWorkButton";
-import type { BookDetailDTO } from "@/lib/types";
+import type { BookDetailDTO, ReadingResourceDTO } from "@/lib/types";
 
 function normalizeAuthorKey(key: string) {
   return key.replace(/^\/+/, "").replace(/^authors\//, "");
@@ -20,6 +21,7 @@ interface WorkDetailContentProps {
   workKey: string;
   isFavorite: boolean;
   isLoggedIn: boolean;
+  readingResource: ReadingResourceDTO;
 }
 
 export default function WorkDetailContent({
@@ -27,7 +29,10 @@ export default function WorkDetailContent({
   workKey,
   isFavorite,
   isLoggedIn,
+  readingResource
 }: WorkDetailContentProps) {
+  const router = useRouter();
+
   return (
     <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
       {/* Back button */}
@@ -104,10 +109,26 @@ export default function WorkDetailContent({
           {/* Actions */}
           <div className="flex flex-wrap gap-3">
             {isLoggedIn && (
-              <FavoriteWorkButton
-                workKey={workKey}
-                initialIsFavorite={isFavorite}
-              />
+              <div className="flex gap-3">
+                <FavoriteWorkButton
+                  workKey={workKey}
+                  initialIsFavorite={isFavorite}
+                />
+                <Button
+                  size="lg"
+                  className={`rounded-xl gap-2 transition-all`}
+                  id="view-chapters-btn"
+                  disabled={!readingResource.available}
+                  onClick={() => {
+                    if (readingResource.available) {
+                      router.push(`/books/works/${encodeURIComponent(workKey)}/chapters/${encodeURIComponent(readingResource.resourceId)}`);
+                    }
+                  }}
+                >
+                  Xem chapter
+                </Button>
+
+              </div>
             )}
             <Link href={`/books/works/${encodeURIComponent(workKey)}/editions`}>
               <Button size="lg" className="rounded-xl">
