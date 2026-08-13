@@ -84,6 +84,23 @@ export interface EditionDTO {
   publisherName: string | null;
 }
 
+export type ReadingResourceDTO = {
+  available: true;
+  readingMode: "CHAPTER" | "CONTINOUS"
+  provider: string;
+  resourceId: string
+} | {
+  available: false;
+}
+
+// ========================
+// Chapter DTOs
+// ========================
+export interface ChapterDTO {
+  id: string;
+  title: string;
+}
+
 // ========================
 // Error DTOs
 // ========================

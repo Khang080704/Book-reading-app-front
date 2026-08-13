@@ -17,3 +17,15 @@ export async function getWorkEditionsAction(workKey: string) {
 export async function getEditionDetailsAction(editionKey: string) {
   return BookService.getEditionDetails(editionKey);
 }
+
+export async function getReadingResourceAction(workKey: string) {
+  return BookService.getReadingResource(workKey);
+}
+
+export async function getAvailableBooksAction() {
+  return BookService.getAvailableBooks();
+}
+
+export async function getChaptersAction(resourceId: string) {
+  return BookService.getChapters(resourceId);
+}
