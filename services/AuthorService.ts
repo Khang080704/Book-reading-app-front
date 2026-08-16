@@ -1,7 +1,7 @@
 'server-only';
 
 import { auth } from "@/auth";
-import type { AuthorDTO, AuthorDetailDTO, WorkDTO } from "@/lib/types";
+import type { AuthorDTO, AuthorDetailDTO, WorkDTO, Page } from "@/lib/types";
 
 export class AuthorService {
   private static async getToken() {
@@ -50,10 +50,14 @@ export class AuthorService {
     return (await res.json()) as AuthorDetailDTO;
   }
 
-  public static async getAuthorWorks(authorKey: string): Promise<WorkDTO[]> {
+  public static async getAuthorWorks(authorKey: string, page = 0, limit = 20): Promise<Page<WorkDTO>> {
     const cleanKey = authorKey.replace(/^\/+/, "").replace(/^authors\//, "");
-    const res = await this.request(`/api/v1/author/${encodeURIComponent(cleanKey)}/works`);
-    if (!res.ok) return [];
-    return (await res.json()) as WorkDTO[];
+    const params = new URLSearchParams({
+      pageNumber: page.toString(),
+      limit: limit.toString(),
+    });
+    const res = await this.request(`/api/v1/author/${encodeURIComponent(cleanKey)}/works?${params.toString()}`);
+    if (!res.ok) return { content: [], page: { size: limit, number: 0, totalElements: 0, totalPages: 0 } };
+    return (await res.json()) as Page<WorkDTO>;
   }
 }

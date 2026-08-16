@@ -4,16 +4,17 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, BookOpen, ArrowLeft } from "lucide-react";
+import { Calendar, BookOpen, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import AuthorWorksList from "@/components/author/AuthorWorksList";
 import FavoriteAuthorButton from "@/components/author/FavoriteAuthorButton";
-import type { AuthorDetailDTO, WorkDTO } from "@/lib/types";
+import type { AuthorDetailDTO, WorkDTO, Page } from "@/lib/types";
+import { getAuthorWorksAction } from "@/actions/author.action";
 
 interface AuthorDetailContentProps {
   detail: AuthorDetailDTO;
-  works: WorkDTO[];
+  initialWorksPage: Page<WorkDTO>;
   authorKey: string;
   isFavorite: boolean;
   isLoggedIn: boolean;
@@ -21,27 +22,34 @@ interface AuthorDetailContentProps {
 
 export default function AuthorDetailContent({
   detail,
-  works,
+  initialWorksPage,
   authorKey,
   isFavorite,
   isLoggedIn,
 }: AuthorDetailContentProps) {
-  const [page, setPage] = useState(1);
+  const [worksPage, setWorksPage] = useState(initialWorksPage);
+  const [isLoading, setIsLoading] = useState(false);
   const worksRef = useRef<HTMLDivElement>(null);
-  console.log(detail)
 
-  const limit = 12;
-  const totalPages = Math.ceil(works.length / limit);
-  const startIndex = (page - 1) * limit;
-  const paginatedWorks = works.slice(startIndex, startIndex + limit);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    if (worksRef.current) {
-      const y = worksRef.current.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top: y, behavior: "smooth" });
+  const handlePageChange = async (newPage: number) => {
+    setIsLoading(true);
+    try {
+      const pageIndex = newPage - 1; // backend uses 0-indexed page
+      const res = await getAuthorWorksAction(authorKey, pageIndex, 20);
+      setWorksPage(res);
+      if (worksRef.current) {
+        const y = worksRef.current.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const currentPage = worksPage.page.number + 1;
+  const totalPages = worksPage.page.totalPages;
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
@@ -118,32 +126,38 @@ export default function AuthorDetailContent({
         <h2 className="text-2xl font-serif font-bold tracking-tight mb-6 flex items-center gap-3">
           <BookOpen className="size-6 text-primary" />
           Tác phẩm
-          {works.length > 0 && (
+          {worksPage.page.totalElements > 0 && (
             <span className="text-sm font-normal text-muted-foreground">
-              ({works.length})
+              ({worksPage.page.totalElements})
             </span>
           )}
         </h2>
-        <AuthorWorksList works={paginatedWorks} />
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="size-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <AuthorWorksList works={worksPage.content} />
+        )}
 
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-3 mt-8">
             <Button
               variant="outline"
               size="sm"
-              disabled={page <= 1}
-              onClick={() => handlePageChange(Math.max(1, page - 1))}
+              disabled={currentPage <= 1 || isLoading}
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
             >
               Trang trước
             </Button>
             <span className="text-sm text-muted-foreground px-3">
-              Trang {page} / {totalPages}
+              Trang {currentPage} / {totalPages}
             </span>
             <Button
               variant="outline"
               size="sm"
-              disabled={page >= totalPages}
-              onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
+              disabled={currentPage >= totalPages || isLoading}
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
             >
               Trang sau
             </Button>
