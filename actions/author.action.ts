@@ -16,6 +16,6 @@ export async function getAuthorDetailAction(olkey: string) {
   return AuthorService.getAuthorDetail(olkey);
 }
 
-export async function getAuthorWorksAction(authorKey: string) {
-  return AuthorService.getAuthorWorks(authorKey);
+export async function getAuthorWorksAction(authorKey: string, page = 0, limit = 20) {
+  return AuthorService.getAuthorWorks(authorKey, page, limit);
 }
