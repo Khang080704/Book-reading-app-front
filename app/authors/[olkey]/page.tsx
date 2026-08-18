@@ -14,10 +14,13 @@ export default async function AuthorDetailPage({ params }: AuthorDetailPageProps
   const key = decodeURIComponent(olkey).replace(/^\/+/, "");
 
   // Fetch author detail and works in parallel using AuthorService (includes Keycloak token if available)
-  const [detail, worksPage] = await Promise.all([
-    AuthorService.getAuthorDetail(key),
-    AuthorService.getAuthorWorks(key, 0, 20),
-  ]);
+  // const [detail, worksPage] = await Promise.all([
+  //   AuthorService.getAuthorDetail(key),
+  //   AuthorService.getAuthorWorks(key, 0, 20),
+  // ]);
+
+  const detail = await AuthorService.getAuthorDetail(key);
+  const worksPage = await AuthorService.getAuthorWorks(key, 0, 20);
 
   if (!detail) {
     notFound();
