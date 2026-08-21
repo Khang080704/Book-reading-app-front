@@ -111,6 +111,8 @@ export type ReadingResourceDTO = {
 export interface ChapterDTO {
   id: string;
   title: string;
+  order: number
+  content: string
 }
 
 // ========================

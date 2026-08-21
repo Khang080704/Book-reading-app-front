@@ -121,7 +121,7 @@ export default function WorkDetailContent({
                   disabled={!readingResource.available}
                   onClick={() => {
                     if (readingResource.available) {
-                      router.push(`/books/works/${encodeURIComponent(workKey)}/chapters/${encodeURIComponent(readingResource.resourceId)}`);
+                      router.push(`/books/works/${encodeURIComponent(workKey)}/resource/${encodeURIComponent(readingResource.resourceId)}`);
                     }
                   }}
                 >
