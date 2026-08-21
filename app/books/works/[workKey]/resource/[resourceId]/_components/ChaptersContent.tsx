@@ -93,12 +93,13 @@ export default function ChaptersContent({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.03, duration: 0.3 }}
             >
-              <div
+              <Link
+                href={`/books/works/${workKey}/chapters/${chapter.id}`}
                 className="group flex items-center gap-4 rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 cursor-pointer"
               >
                 {/* Chapter number indicator */}
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary font-semibold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  {index + 1}
+                  {chapter.order + 1}
                 </div>
 
                 {/* Chapter info */}
@@ -120,7 +121,7 @@ export default function ChaptersContent({
                 >
                   <path d="M9 18l6-6-6-6" />
                 </svg>
-              </div>
+              </Link>
             </motion.div>
           ))
         )}

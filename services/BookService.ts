@@ -78,9 +78,14 @@ export class BookService {
   }
 
   public static async getChapters(resourceId: string): Promise<ChapterDTO[]> {
-    const res = await this.request(`/api/v1/reading-resources/${encodeURIComponent(resourceId)}`);
+    const res = await this.request(`/api/v1/reading-resources/${encodeURIComponent(resourceId)}/chapters`);
     if (!res.ok) return [];
-    return (await res.json()) as ChapterDTO[];
+
+    const data = (await res.json()) as ChapterDTO[];
+
+    data.sort((a, b) => a.order - b.order)
+
+    return data;
   }
 }
 
