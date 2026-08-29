@@ -112,7 +112,10 @@ export interface ChapterDTO {
   id: string;
   title: string;
   order: number
-  content: string
+  content: string;
+  prevChapterId?: string
+  nextChapterId?: string;
+  resourceId: string
 }
 
 // ========================
