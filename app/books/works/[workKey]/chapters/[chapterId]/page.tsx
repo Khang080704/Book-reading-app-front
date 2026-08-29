@@ -16,6 +16,9 @@ export default async function ChapterPage({ params }: ChaptersPageProps) {
       content={data.content}
       title={data.title}
       order={data.order}
+      nextChapterId={data.nextChapterId}
+      prevChapterId={data.prevChapterId}
+      resourceId={data.resourceId}
     />
   );
 }
