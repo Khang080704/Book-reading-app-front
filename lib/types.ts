@@ -101,8 +101,7 @@ export type ReadingResourceDTO = {
   readingMode: "CHAPTER" | "CONTINOUS"
   provider: string;
   resourceId: string
-} | {
-  available: false;
+  language: string
 }
 
 // ========================

@@ -1,144 +1,201 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { ArrowLeft, BookOpen, Layers, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import FavoriteWorkButton from "@/components/book/FavoriteWorkButton";
-import type { BookDetailDTO, ReadingResourceDTO } from "@/lib/types";
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { redirect, useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import {
+    ArrowDownNarrowWide,
+    ArrowLeft,
+    BookOpen,
+    ChevronDown,
+    Layers,
+    User,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import FavoriteWorkButton from '@/components/book/FavoriteWorkButton';
+import type { BookDetailDTO, ReadingResourceDTO } from '@/lib/types';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 function normalizeAuthorKey(key: string) {
-  return key.replace(/^\/+/, "").replace(/^authors\//, "");
+    return key.replace(/^\/+/, '').replace(/^authors\//, '');
 }
 
 interface WorkDetailContentProps {
-  data: BookDetailDTO;
-  workKey: string;
-  isFavorite: boolean;
-  isLoggedIn: boolean;
-  readingResource: ReadingResourceDTO;
+    data: BookDetailDTO;
+    workKey: string;
+    isFavorite: boolean;
+    isLoggedIn: boolean;
+    readingResource: ReadingResourceDTO[];
 }
 
 export default function WorkDetailContent({
-  data,
-  workKey,
-  isFavorite,
-  isLoggedIn,
-  readingResource
+    data,
+    workKey,
+    isFavorite,
+    isLoggedIn,
+    readingResource,
 }: WorkDetailContentProps) {
-  const router = useRouter();
+    const router = useRouter();
 
-  return (
-    <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
-      {/* Back button */}
-      <Link href="/books/search">
-        <Button variant="ghost" size="sm" className="mb-6 -ml-2">
-          <ArrowLeft className="size-4 mr-1" />
-          Quay lại
-        </Button>
-      </Link>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="flex flex-col md:flex-row gap-8"
-      >
-        {/* Cover */}
-        <div className="shrink-0 mx-auto md:mx-0">
-          <div className="relative w-52 h-80 overflow-hidden rounded-2xl bg-muted shadow-2xl ring-1 ring-border/20">
-            {data?.coverUrl ? (
-              <Image
-                src={data.coverUrl}
-                alt={data.title ?? "Book cover"}
-                fill
-                sizes="208px"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <div className="flex size-full items-center justify-center">
-                <BookOpen className="size-16 text-muted-foreground/30" />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Details */}
-        <div className="flex-1 min-w-0">
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight leading-tight">
-            {data?.title ?? "Tác phẩm"}
-          </h1>
-
-          {/* Author links */}
-          {data?.authorKeys && data.authorKeys.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mt-3">
-              <User className="size-4 text-muted-foreground" />
-              {data.authorKeys.map((authorKey) => {
-                const key = normalizeAuthorKey(authorKey);
-                return (
-                  <Link key={authorKey} href={`/authors/${encodeURIComponent(key)}`}>
-                    <Badge variant="secondary" className="cursor-pointer hover:bg-primary/10 transition-colors">
-                      {key}
-                    </Badge>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-
-          {data?.description && (
-            <>
-              <Separator className="my-6" />
-              <div>
-                <h2 className="text-lg font-semibold mb-3">Mô tả</h2>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {data.description}
-                </p>
-              </div>
-            </>
-          )}
-
-          <Separator className="my-6" />
-
-          {/* Actions */}
-          <div className="flex flex-wrap gap-3">
-            {isLoggedIn && (
-              <div className="flex gap-3">
-                <FavoriteWorkButton
-                  workKey={workKey}
-                  initialIsFavorite={isFavorite}
-                />
-                <Button
-                  size="lg"
-                  className={`rounded-xl gap-2 transition-all`}
-                  id="view-chapters-btn"
-                  disabled={!readingResource.available}
-                  onClick={() => {
-                    if (readingResource.available) {
-                      router.push(`/books/works/${encodeURIComponent(workKey)}/resource/${encodeURIComponent(readingResource.resourceId)}`);
-                    }
-                  }}
-                >
-                  Xem chapter
+    return (
+        <main className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
+            {/* Back button */}
+            <Link href="/books/search">
+                <Button variant="ghost" size="sm" className="mb-6 -ml-2">
+                    <ArrowLeft className="size-4 mr-1" />
+                    Quay lại
                 </Button>
-
-              </div>
-            )}
-            <Link href={`/books/works/${encodeURIComponent(workKey)}/editions`}>
-              <Button size="lg" className="rounded-xl">
-                <Layers className="size-4 mr-2" />
-                Xem các ấn bản
-              </Button>
             </Link>
-          </div>
-        </div>
-      </motion.div>
-    </main>
-  );
+
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col md:flex-row gap-8"
+            >
+                {/* Cover */}
+                <div className="shrink-0 mx-auto md:mx-0">
+                    <div className="relative w-52 h-80 overflow-hidden rounded-2xl bg-muted shadow-2xl ring-1 ring-border/20">
+                        {data?.coverUrl ? (
+                            <Image
+                                src={data.coverUrl}
+                                alt={data.title ?? 'Book cover'}
+                                fill
+                                sizes="208px"
+                                className="object-cover"
+                                priority
+                            />
+                        ) : (
+                            <div className="flex size-full items-center justify-center">
+                                <BookOpen className="size-16 text-muted-foreground/30" />
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Details */}
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight leading-tight">
+                        {data?.title ?? 'Tác phẩm'}
+                    </h1>
+
+                    {/* Author links */}
+                    {data?.authorKeys && data.authorKeys.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2 mt-3">
+                            <User className="size-4 text-muted-foreground" />
+                            {data.authorKeys.map(authorKey => {
+                                const key = normalizeAuthorKey(authorKey);
+                                return (
+                                    <Link
+                                        key={authorKey}
+                                        href={`/authors/${encodeURIComponent(key)}`}
+                                    >
+                                        <Badge
+                                            variant="secondary"
+                                            className="cursor-pointer hover:bg-primary/10 transition-colors"
+                                        >
+                                            {key}
+                                        </Badge>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {data?.description && (
+                        <>
+                            <Separator className="my-6" />
+                            <div>
+                                <h2 className="text-lg font-semibold mb-3">
+                                    Mô tả
+                                </h2>
+                                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                                    {data.description}
+                                </p>
+                            </div>
+                        </>
+                    )}
+
+                    <Separator className="my-6" />
+
+                    {/* Actions */}
+                    <div className="flex flex-wrap gap-3">
+                        {isLoggedIn && (
+                            <div className="flex gap-3">
+                                <FavoriteWorkButton
+                                    workKey={workKey}
+                                    initialIsFavorite={isFavorite}
+                                />
+
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            size="lg"
+                                            className={`rounded-xl gap-2 transition-all`}
+                                            disabled={
+                                                !readingResource ||
+                                                readingResource.length === 0
+                                            }
+                                        >
+                                            <BookOpen className='size-4' />
+                                            Đọc ngay
+                                            <ChevronDown className='size-4'/>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+
+                                    <DropdownMenuContent className="w-72" align="start">
+                                        <DropdownMenuLabel>
+                                            Chọn nguồn đọc
+                                        </DropdownMenuLabel>
+
+                                        <DropdownMenuSeparator />
+
+                                        {readingResource.map(item => (
+                                            <DropdownMenuItem
+                                                key={item.resourceId}
+                                                onClick={() =>
+                                                    redirect(
+                                                        `/books/works/${encodeURIComponent(workKey)}/resource/${encodeURIComponent(item.resourceId)}`
+                                                    )
+                                                }
+                                            >
+                                                <div className="flex items-center justify-between w-full">
+                                                    <span>{item.provider}</span>
+
+                                                    <Badge variant="outline">
+                                                        {item.readingMode}
+                                                    </Badge>
+
+                                                    <span>{item.language}</span>
+                                                </div>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        )}
+                        <Link
+                            href={`/books/works/${encodeURIComponent(workKey)}/editions`}
+                        >
+                            <Button size="lg" className="rounded-xl">
+                                <Layers className="size-4 mr-2" />
+                                Xem các ấn bản
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+            </motion.div>
+        </main>
+    );
 }

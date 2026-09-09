@@ -64,11 +64,10 @@ export class BookService {
     return (await res.json()) as EditionDTO;
   }
 
-  public static async getReadingResource(workKey: string): Promise<ReadingResourceDTO> {
-    console.log(workKey)
+  public static async getReadingResource(workKey: string): Promise<ReadingResourceDTO[]> {
     const res = await this.request(`/api/v1/books/works/${workKey}/reading-resource`);
     const data = await res.json();
-    return data as ReadingResourceDTO;
+    return data as ReadingResourceDTO[];
   }
 
   public static async getAvailableBooks(): Promise<SearchBookDTO[]> {
