@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Search, BookOpen } from "lucide-react";
@@ -11,9 +11,7 @@ import { BookCardSkeletonGrid } from "@/components/ui/PageSkeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-
-
-export default function BooksSearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQ = searchParams.get("q") ?? "";
@@ -116,3 +114,18 @@ export default function BooksSearchPage() {
     </main>
   );
 }
+
+export default function BooksSearchPage() {
+  return (
+    <Suspense fallback={
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8">
+        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+          <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      </main>
+    }>
+      <SearchContent />
+    </Suspense>
+  );
+}
+

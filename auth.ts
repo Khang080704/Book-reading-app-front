@@ -7,8 +7,12 @@ import type { JWT } from "next-auth/jwt";
 // ─────────────────────────────────────────────
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
+    const tokenUrl = process.env.AUTH_KEYCLOAK_INTERNAL_URL 
+      ? `${process.env.AUTH_KEYCLOAK_INTERNAL_URL}/protocol/openid-connect/token` 
+      : `${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/token`;
+
     const response = await fetch(
-      `${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/token`,
+      tokenUrl,
       {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -55,6 +59,12 @@ export const {
       clientId: process.env.AUTH_KEYCLOAK_ID!,
       clientSecret: process.env.AUTH_KEYCLOAK_SECRET!,
       issuer: process.env.AUTH_KEYCLOAK_ISSUER!,
+      ...(process.env.AUTH_KEYCLOAK_INTERNAL_URL && {
+        authorization: `${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/auth`,
+        token: `${process.env.AUTH_KEYCLOAK_INTERNAL_URL}/protocol/openid-connect/token`,
+        userinfo: `${process.env.AUTH_KEYCLOAK_INTERNAL_URL}/protocol/openid-connect/userinfo`,
+        jwks_endpoint: `${process.env.AUTH_KEYCLOAK_INTERNAL_URL}/protocol/openid-connect/certs`,
+      }),
     }),
   ],
 
