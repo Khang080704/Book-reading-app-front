@@ -1,7 +1,7 @@
 'server-only'
 
 import { auth } from "@/auth"
-import type { WorkDTO, AuthorDTO } from "@/lib/types"
+import type { WorkDTO, AuthorDTO, Page } from "@/lib/types"
 import { BookService } from "./BookService";
 import { AuthorService } from "./AuthorService";
 
@@ -80,7 +80,7 @@ export class FavoriteService {
     return AuthorService.getAuthorDetail(olkey);
   }
 
-  public static async getAuthorWorks(authorKey: string): Promise<WorkDTO[]> {
+  public static async getAuthorWorks(authorKey: string): Promise<Page<WorkDTO>> {
     return AuthorService.getAuthorWorks(authorKey);
   }
 }
