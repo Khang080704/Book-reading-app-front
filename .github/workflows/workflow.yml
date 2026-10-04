@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build:
@@ -24,6 +25,13 @@ jobs:
       - name: Build Next.js
         run: npm run build
 
+      - name: Check build output
+        run: |
+          echo "=== .next ==="
+          ls -lah .next
+          echo "=== .next/standalone ==="
+          ls -lah .next/standalone
+          
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
