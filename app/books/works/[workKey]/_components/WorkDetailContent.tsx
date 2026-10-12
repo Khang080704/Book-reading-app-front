@@ -131,60 +131,58 @@ export default function WorkDetailContent({
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-3">
-                        {isLoggedIn && (
-                            <div className="flex gap-3">
-                                <FavoriteWorkButton
-                                    workKey={workKey}
-                                    initialIsFavorite={isFavorite}
-                                />
+                        <div className="flex gap-3">
+                            <FavoriteWorkButton
+                                workKey={workKey}
+                                initialIsFavorite={isFavorite}
+                            />
 
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            size="lg"
-                                            className={`rounded-xl gap-2 transition-all`}
-                                            disabled={
-                                                !readingResource ||
-                                                readingResource.length === 0
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        size="lg"
+                                        className={`rounded-xl gap-2 transition-all`}
+                                        disabled={
+                                            !readingResource ||
+                                            readingResource.length === 0
+                                        }
+                                    >
+                                        <BookOpen className='size-4' />
+                                        Đọc ngay
+                                        <ChevronDown className='size-4' />
+                                    </Button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent className="w-72" align="start">
+                                    <DropdownMenuLabel>
+                                        Chọn nguồn đọc
+                                    </DropdownMenuLabel>
+
+                                    <DropdownMenuSeparator />
+
+                                    {readingResource.map(item => (
+                                        <DropdownMenuItem
+                                            key={item.resourceId}
+                                            onClick={() =>
+                                                redirect(
+                                                    `/books/works/${encodeURIComponent(workKey)}/resource/${encodeURIComponent(item.resourceId)}`
+                                                )
                                             }
                                         >
-                                            <BookOpen className='size-4' />
-                                            Đọc ngay
-                                            <ChevronDown className='size-4'/>
-                                        </Button>
-                                    </DropdownMenuTrigger>
+                                            <div className="flex items-center justify-between w-full">
+                                                <span>{item.provider}</span>
 
-                                    <DropdownMenuContent className="w-72" align="start">
-                                        <DropdownMenuLabel>
-                                            Chọn nguồn đọc
-                                        </DropdownMenuLabel>
+                                                <Badge variant="outline">
+                                                    {item.readingMode}
+                                                </Badge>
 
-                                        <DropdownMenuSeparator />
-
-                                        {readingResource.map(item => (
-                                            <DropdownMenuItem
-                                                key={item.resourceId}
-                                                onClick={() =>
-                                                    redirect(
-                                                        `/books/works/${encodeURIComponent(workKey)}/resource/${encodeURIComponent(item.resourceId)}`
-                                                    )
-                                                }
-                                            >
-                                                <div className="flex items-center justify-between w-full">
-                                                    <span>{item.provider}</span>
-
-                                                    <Badge variant="outline">
-                                                        {item.readingMode}
-                                                    </Badge>
-
-                                                    <span>{item.language}</span>
-                                                </div>
-                                            </DropdownMenuItem>
-                                        ))}
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        )}
+                                                <span>{item.language}</span>
+                                            </div>
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                         <Link
                             href={`/books/works/${encodeURIComponent(workKey)}/editions`}
                         >
