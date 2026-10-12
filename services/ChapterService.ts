@@ -1,3 +1,5 @@
+'server-only';
+
 import { auth } from "@/auth";
 import { ChapterDTO } from "@/lib/types";
 
