@@ -20,7 +20,7 @@ const features = [
   {
     icon: BookOpen,
     title: "Thư viện khổng lồ",
-    description: "Truy cập hàng triệu đầu sách từ Open Library, miễn phí hoàn toàn.",
+    description: "Truy cập hàng ngàn đầu sách từ Open Library, miễn phí hoàn toàn.",
   },
   {
     icon: Search,
@@ -96,7 +96,7 @@ export default function Home() {
               variants={fadeUp}
               className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
             >
-              Truy cập hàng triệu cuốn sách từ khắp nơi trên thế giới. Tìm kiếm, khám phá
+              Truy cập hàng ngàn cuốn sách từ khắp nơi trên thế giới. Tìm kiếm, khám phá
               và xây dựng thư viện cá nhân hoàn toàn miễn phí.
             </motion.p>
 
