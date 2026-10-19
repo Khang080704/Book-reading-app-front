@@ -69,8 +69,8 @@ jobs:
           script: |
             cd ~/bookverse/
 
-            docker compose pull
+            docker compose pull frontend
 
-            docker compose up --build -d
+            docker compose up --build -d --force-recreate frontend
 
             docker image prune -f
